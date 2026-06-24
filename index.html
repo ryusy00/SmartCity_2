@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스마트도시분석포털</title>
+
+  <!-- Leaflet: 앱키 없이 사용 가능한 OpenStreetMap 기반 지도 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="layout site-header__inner">
+        <h1 class="logo">
+          <a href="#"><img src="/images/headerLogo.png" alt="광주광역시 스마트도시분석포털" /></a>
+        </h1>
+
+        <nav class="gnb" aria-label="주메뉴">
+          <a href="#notice">알림글</a>
+          <a href="#fieldMap">분야별지도</a>
+          <a href="#linkedInfo">연계정보</a>
+          <a href="#yearbook">통계연보</a>
+        </nav>
+
+        <button class="mobile-menu-btn" type="button" aria-label="모바일 메뉴 열기" aria-expanded="false">
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="mobile-nav" aria-label="모바일 메뉴">
+        <div class="layout">
+          <a href="#notice">알림글</a>
+          <a href="#fieldMap">분야별지도</a>
+          <a href="#linkedInfo">연계정보</a>
+          <a href="#yearbook">통계연보</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 분야별 지도 -->
+      <section class="field-section" id="fieldMap">
+        <div class="layout field-section__inner">
+          <h2 class="field-title">분야별<br class="pc-only" />지도</h2>
+          <div class="field-list">
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_1.png" alt="인구" /></span>
+              <span class="field-card__text">인구</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_2.png" alt="교통" /></span>
+              <span class="field-card__text">교통</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_3.png" alt="생활" /></span>
+              <span class="field-card__text">생활</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_4.png" alt="복지" /></span>
+              <span class="field-card__text">복지</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_5.png" alt="보건" /></span>
+              <span class="field-card__text">보건</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_6.png" alt="문화" /></span>
+              <span class="field-card__text">문화</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_7.png" alt="안전" /></span>
+              <span class="field-card__text">안전</span>
+            </a>
+            <a href="#" class="field-card">
+              <span class="field-card__icon"><img src="./images/icon_8.png" alt="부동산" /></span>
+              <span class="field-card__text">부동산</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 지도 검색 -->
+      <section class="map-section">
+        <div class="layout">
+          <div class="map-area">
+            <div id="map" class="map" aria-label="광주광역시 지도"></div>
+
+            <div class="map-search">
+              <div class="map-search__head">
+                <h3>부동산 정보조회</h3>
+                <a href="#" class="map-search__link">메뉴이동&nbsp; &gt;</a>
+              </div>
+
+              <div class="map-search__group">
+                <strong>주소</strong>
+                <div class="map-search__grid">
+                  <select id="districtSelect" title="구명 선택">
+                    <option value="">구명</option>
+                    <option value="buk">북구</option>
+                    <option value="dong">동구</option>
+                    <option value="seo">서구</option>
+                    <option value="nam">남구</option>
+                    <option value="gwangsan">광산구</option>
+                  </select>
+                  <select id="dongSelect" title="동명 선택">
+                    <option value="">동명</option>
+                    <option value="운암동">운암동</option>
+                    <option value="문흥동">문흥동</option>
+                    <option value="양산동">양산동</option>
+                    <option value="치평동">치평동</option>
+                    <option value="쌍촌동">쌍촌동</option>
+                  </select>
+                </div>
+
+                <div class="map-search__grid map-search__grid--one">
+                  <select id="addressTypeSelect" title="주소 유형 선택">
+                    <option value="normal">일반</option>
+                    <option value="road">도로명</option>
+                    <option value="jibun">지번</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="map-search__group">
+                <strong>지번</strong>
+                <div class="map-search__grid">
+                  <input type="text" id="lotMainInput" placeholder="본번" title="본번 입력" />
+                  <input type="text" id="lotSubInput" placeholder="부번" title="부번 입력" />
+                </div>
+              </div>
+
+              <button type="button" class="map-search__button" id="mapSearchBtn">검색</button>
+            </div>
+
+            <div class="map-control">
+              <button type="button" id="zoomOutBtn">－ 지도축소</button>
+              <button type="button" id="zoomInBtn">＋ 지도확장</button>
+              <button type="button" id="layerToggleBtn" class="map-control__blue">항공뷰</button>
+            </div>
+          </div>
+
+          <!-- 공지사항 -->
+          <section class="notice-row" id="notice" aria-label="공지사항">
+            <a href="#" class="notice-row__title">
+              <span>N</span>
+              <strong>공지사항</strong>
+            </a>
+
+            <div class="notice-slider" aria-live="polite">
+              <a href="#" class="notice-slider__item is-active" data-date="2025-09-29">
+                일부 서비스 일시중지 안내
+              </a>
+              <a href="#" class="notice-slider__item" data-date="2025-09-22">
+                스마트도시분석포털 기능 개선 안내
+              </a>
+              <a href="#" class="notice-slider__item" data-date="2025-09-15">
+                2025년 광주 통계연보 자료 업데이트 안내
+              </a>
+            </div>
+
+            <time class="notice-row__date" id="noticeDate" datetime="2025-09-29">2025-09-29</time>
+            <a href="#" class="notice-row__more" aria-label="공지사항 더보기"></a>
+          </section>
+        </div>
+      </section>
+
+      <!-- 연계정보 -->
+      <section class="linked-section" id="linkedInfo">
+        <div class="layout">
+          <h2 class="section-title">연계정보</h2>
+
+          <div class="linked-list">
+            <a href="#" class="linked-card">
+              <div class="linked-card__body">
+                <span class="linked-card__icon"><img src="./images/linked_traffic.png" alt="교통" /></span>
+                <h3>교통</h3>
+              </div>
+              <p>실시간 교통흐름과 CCTV, 돌발정보, 주차장 정보를 확인할 수 있습니다.</p>
+              <hr>
+              <span class="linked-card__button">자세히보기 →</span>
+              <!-- <span class="linked-card__arrow" aria-hidden="true">→</span> -->
+            </a>
+
+            <a href="#" class="linked-card">
+              <div class="linked-card__body">
+                <span class="linked-card__icon"><img src="./images/linked_realestate.png" alt="부동산" /></span>
+                <h3>부동산</h3>
+              </div>
+              <p>지도 기반으로 토지·건물 등 부동산 종합정보와 통계 정보를 제공합니다.</p>
+              <hr>
+              <span class="linked-card__button">자세히보기 →</span>
+              <!-- <span class="linked-card__arrow" aria-hidden="true">→</span> -->
+            </a>
+
+            <a href="#" class="linked-card">
+              <div class="linked-card__body">
+                <span class="linked-card__icon"><img src="./images/linked_culture.png" alt="문화" /></span>
+                <h3>문화</h3> 
+              </div>
+              <p>광주의 미술관, 박물관, 공연시설 등 주요 문화시설 정보를 확인할 수 있습니다.</p>
+              <hr>
+              <span class="linked-card__button">자세히보기 →</span>
+              <!-- <span class="linked-card__arrow" aria-hidden="true">→</span> -->
+            </a>
+
+            <a href="#" class="linked-card">
+              <div class="linked-card__body">
+                <span class="linked-card__icon"><img src="./images/linked_3dmap.png" alt="3차원지도" /></span>
+                <h3>3차원지도</h3>
+              </div>
+              <p>2D·3D 지도를 기반으로 공간정보 조회와 지형·건물 분석 기능을 제공합니다.</p>
+              <hr>
+              <span class="linked-card__button">자세히보기 →</span>
+              <!-- <span class="linked-card__arrow" aria-hidden="true">→</span> -->
+            </a>
+
+            <a href="#" class="linked-card">
+              <div class="linked-card__body">
+                <span class="linked-card__icon"><img src="./images/linked_tourbigdata.png" alt="관광빅데이터분석" /></span>
+                <h3>관광빅데이터분석</h3>
+              </div>
+              <p>관광객 유동, 소비, 방문 현황 등 관광 빅데이터를 지도 기반으로 확인할 수 있습니다.</p>
+              <hr>
+              <span class="linked-card__button">자세히보기 →</span>
+              <!-- <span class="linked-card__arrow" aria-hidden="true">→</span> -->
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 통계연보 -->
+      <section class="yearbook-section" id="yearbook">
+        <div class="layout yearbook-section__inner">
+          <div class="yearbook-intro">
+            <h2 class="section-title">통계연보</h2>
+            <p>해당 년도까지의 광주광역시<br />전체 통계연보를 제공받을 수 있습니다.</p>
+            <a href="#" class="yearbook-detail">년도별 상세 <span>→</span></a>
+          </div>
+
+          <div class="yearbook-list">
+            <a href="#" class="yearbook-item">
+              <strong>2025 광주 통계연보</strong>
+              <span>다운로드 ⭳</span>
+            </a>
+            <a href="#" class="yearbook-item">
+              <strong>2024 광주 통계연보</strong>
+              <span>다운로드 ⭳</span>
+            </a>
+            <a href="#" class="yearbook-item">
+              <strong>2023 광주 통계연보</strong>
+              <span>다운로드 ⭳</span>
+            </a>
+            <a href="#" class="yearbook-item">
+              <strong>2022 광주 통계연보</strong>
+              <span>다운로드 ⭳</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 배너모음 -->
+      <aside class="banner-zone" aria-label="배너모음">
+        <div class="layout banner-zone__inner">
+          <h2>배너모음</h2>
+
+          <button class="banner-arrow banner-arrow--prev" type="button" aria-label="이전 배너"></button>
+
+          <div class="banner-slider">
+            <div class="banner-track" id="bannerTrack">
+              <a href="#" class="banner-item">광주광역시</a>
+              <a href="#" class="banner-item">광주광역시 항공사진서비스</a>
+              <a href="#" class="banner-item">SEE:REAL</a>
+              <a href="#" class="banner-item">오매광주</a>
+              <a href="#" class="banner-item">광주광역시 교통정보센터</a>
+              <a href="#" class="banner-item">광주관광정보</a>
+              <a href="#" class="banner-item">스마트시티 통합플랫폼</a>
+            </div>
+          </div>
+
+          <button class="banner-arrow banner-arrow--next" type="button" aria-label="다음 배너"></button>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="layout site-footer__inner">
+        <div class="footer-logo">
+          <img src="./images/footerLogo.png" alt="내 일이 빛나는 기회도시 광주" class="footer-logo" />
+        </div>
+
+        <div class="footer-info">
+          <p>[61945]광주광역시 서구 내방로 111(치평동)<br />TEL : 062) 120</p>
+          <p>
+            본 페이지에 게시된 메일 주소가 자동으로 수집되는 것을 거부하며,
+            이를 위반 시 정보통신망법에 의해 처벌됨을 유념하시기 바랍니다.
+          </p>
+        </div>
+      </div>
+
+      <p class="copyright">
+        Copyright © 2025 Gwangju Metropolitan City. All Rights Reserved.
+      </p>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="./js/main.js"></script>
+</body>
+
+</html>
