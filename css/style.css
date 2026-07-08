@@ -1104,7 +1104,15 @@ button {
       gap: 2.25rem;
   }
 }
+@media (max-width: 420px) {
+  .map-search {
+    width: 280px;
+  }
+}
 @media (max-width: 395px) {
+  .map-search {
+    width: 260px;
+  }
   .field-card {
       gap: 1rem;
   }
