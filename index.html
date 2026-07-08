@@ -19,7 +19,7 @@
     <header class="site-header">
       <div class="layout site-header__inner">
         <h1 class="logo">
-          <a href="#"><img src="./images/headerLogo.png" alt="광주광역시 스마트도시분석포털" /></a>
+          <a href="#"><img src="/images/headerLogo.png" alt="광주광역시 스마트도시분석포털" /></a>
         </h1>
 
         <nav class="gnb" aria-label="주메뉴">
@@ -236,31 +236,39 @@
       </section>
 
       <!-- 통계연보 -->
-      <section class="yearbook-section" id="yearbook">
+      <section class="yearbook-section yearbook-section--book" id="yearbook">
         <div class="layout yearbook-section__inner">
           <div class="yearbook-intro">
             <h2 class="section-title">통계연보</h2>
-            <p>해당 년도까지의 광주광역시<br />전체 통계연보를 제공받을 수 있습니다.</p>
-            <a href="#" class="yearbook-detail">년도별 상세 <span>→</span></a>
+            <p>연도 선택 후 PDF를 바로 이용할 수 있습니다.</p>
           </div>
 
-          <div class="yearbook-list">
-            <a href="#" class="yearbook-item">
-              <strong>2025 광주 통계연보</strong>
-              <span>다운로드 ⭳</span>
+          <div class="yearbook-book" aria-live="polite">
+            <a href="#" class="yearbook-cover" id="yearbookCover" target="_blank" rel="noopener noreferrer"
+              aria-label="2025 광주 통계연보 e-Book 보기">
+              <span class="yearbook-cover__tag" id="yearbookTag">최신</span>
+              <span class="yearbook-cover__eyebrow">GWANGJU STATISTICAL YEARBOOK</span>
+              <strong class="yearbook-cover__year" id="yearbookYear">2025</strong>
+              <span class="yearbook-cover__title">광주<br />통계연보</span>
             </a>
-            <a href="#" class="yearbook-item">
-              <strong>2024 광주 통계연보</strong>
-              <span>다운로드 ⭳</span>
-            </a>
-            <a href="#" class="yearbook-item">
-              <strong>2023 광주 통계연보</strong>
-              <span>다운로드 ⭳</span>
-            </a>
-            <a href="#" class="yearbook-item">
-              <strong>2022 광주 통계연보</strong>
-              <span>다운로드 ⭳</span>
-            </a>
+
+            <div class="yearbook-panel">
+              <div class="yearbook-panel__head">
+                <span>선택 연도</span>
+                <strong id="yearbookTitle">2025 광주 통계연보</strong>
+              </div>
+
+              <div class="yearbook-years" role="tablist" aria-label="통계연보 연도 선택">
+                <button type="button" class="yearbook-year is-active" data-year="2025" aria-selected="true">2025</button>
+                <button type="button" class="yearbook-year" data-year="2024" aria-selected="false">2024</button>
+                <button type="button" class="yearbook-year" data-year="2023" aria-selected="false">2023</button>
+                <button type="button" class="yearbook-year" data-year="2022" aria-selected="false">2022</button>
+              </div>
+
+              <div class="yearbook-actions">
+                <a href="#" class="yearbook-action" id="yearbookPdf" download>PDF 다운로드</a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -289,7 +297,7 @@
       </aside>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer -->   
     <footer class="site-footer">
       <div class="layout site-footer__inner">
         <div class="footer-logo">
@@ -314,6 +322,61 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="./js/main.js"></script>
+
+  <script>
+    // 통계연보: 대표 책 1개 + 연도 선택 필터
+    document.addEventListener('DOMContentLoaded', function () {
+      const yearButtons = document.querySelectorAll('.yearbook-year');
+      const cover = document.getElementById('yearbookCover');
+      const yearText = document.getElementById('yearbookYear');
+      const title = document.getElementById('yearbookTitle');
+      const tag = document.getElementById('yearbookTag');
+      const ebook = document.getElementById('yearbookEbook');
+      const pdf = document.getElementById('yearbookPdf');
+
+      if (!yearButtons.length || !cover || !yearText || !title || !ebook || !pdf) return;
+
+      const yearbookData = {
+        '2025': { ebookUrl: '#', pdfUrl: '#', latest: true },
+        '2024': { ebookUrl: '#', pdfUrl: '#', latest: false },
+        '2023': { ebookUrl: '#', pdfUrl: '#', latest: false },
+        '2022': { ebookUrl: '#', pdfUrl: '#', latest: false }
+      };
+
+      function setYearbook(year) {
+        const data = yearbookData[year] || yearbookData['2025'];
+        const label = year + ' 광주 통계연보';
+
+        yearText.textContent = year;
+        title.textContent = label;
+
+        cover.href = data.ebookUrl;
+        cover.setAttribute('aria-label', label + ' e-Book 보기');
+
+        ebook.href = data.ebookUrl;
+        ebook.setAttribute('aria-label', label + ' e-Book 보기');
+
+        pdf.href = data.pdfUrl;
+        pdf.setAttribute('aria-label', label + ' PDF 다운로드');
+
+        if (tag) tag.hidden = !data.latest;
+
+        yearButtons.forEach(function (button) {
+          const active = button.dataset.year === year;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+      }
+
+      yearButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          setYearbook(button.dataset.year);
+        });
+      });
+
+      setYearbook('2025');
+    });
+  </script>
 </body>
 
 </html>
